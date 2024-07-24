@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  serverapi:
+    image: serverapi
+    container_name: serverapi
+    build:
+      context: "."
+      dockerfile: Dockerfile
+    volumes:
+      - serverapi:/usr/src/app
+    ports:
+      - "8080:8080"
+    restart: always
+    depends_on:
+      - mysql
+
+  mysql:
+    container_name: mysql
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: db_pinterest
+      MYSQL_ROOT_PASSWORD: 12345678
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./db_pinterest.sql:/docker-entrypoint-initdb.d/db_pinterest.sql
+
+volumes:
+  mysql-data:
+  serverapi:
